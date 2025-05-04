@@ -1,7 +1,7 @@
 // src/routes/api/users/+server.ts
 import { json, error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { contract } from '$lib/contract';
+import { contract } from '$lib/api-contracts';
 import { z } from 'zod';
 
 // Assume you have some user data source
@@ -13,11 +13,12 @@ const users = [
 export const GET: RequestHandler = async ({ url }) => {
 	try {
 		// Validate query parameters using the contract's types/schemas
-		const queryParams = contract.getUsers.query.parse(Object.fromEntries(url.searchParams));
+		const queryParams = contract.users.getUsers.query.parse(Object.fromEntries(url.searchParams));
 
 		// Implement your logic to fetch users based on limit and offset
 		const { limit, offset } = queryParams;
 		const filteredUsers = users.slice(offset ?? 0, limit ? (offset ?? 0) + limit : users.length);
+		
 
 		// Return a JSON response conforming to the contract's 200 response type
 		return json(filteredUsers, { status: 200 });
@@ -34,7 +35,7 @@ export const GET: RequestHandler = async ({ url }) => {
 export const POST: RequestHandler = async ({ request }) => {
 	try {
 		// Parse and validate the request body using the contract's types/schemas
-		const requestBody = contract.createUser.body.parse(await request.json());
+		const requestBody = contract.users.createUser.body.parse(await request.json());
 
 		// Implement your logic to create a new user
 		const newUser = { id: Date.now().toString(), ...requestBody };

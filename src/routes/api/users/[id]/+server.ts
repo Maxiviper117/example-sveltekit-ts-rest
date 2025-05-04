@@ -1,7 +1,7 @@
 // src/routes/api/users/[id]/+server.ts
 import { json, error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { contract } from '$lib/contract';
+import { contract } from '$lib/api-contracts';
 import { z } from 'zod';
 
 // Assume you have some user data source
@@ -13,7 +13,7 @@ const users = [
 export const GET: RequestHandler = async ({ params }) => {
 	try {
 		// Validate path parameters using the contract's types/schemas
-		const { id } = contract.getUserById.pathParams.parse(params);
+		const { id } = contract.users.getUserById.pathParams.parse(params);
 
 		// Find the user by ID
 		const user = users.find((u) => u.id === id);
