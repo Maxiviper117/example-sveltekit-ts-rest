@@ -60,3 +60,4 @@ export const usersContract = c.router({
 });
 
 export type UsersContract = typeof usersContract;
+
